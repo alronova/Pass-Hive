@@ -1,20 +1,32 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-require("dotenv").config();
+const port = process.env.PORT || 3000;
+const bodyParser = require("body-parser");
+const authRouter = require("./routes/authRouter");
+const passRouter = require("./routes/passRouter");
 
-app.get("/", (req, res) => {
-  res.send("Wakanda Forever!");
+require("dotenv").config();
+require('./models/db_conn');
+
+app.get("/ping", (req, res) => {
+  res.send("pong");
 });
+
 app.use(
   cors({
-    origin: "http://localhost:5173", // Allow only this domain
-    methods: "GET,POST,PUT,DELETE", // Allow specific HTTP methods
-    allowedHeaders: "Content-Type,Authorization", // Allow specific headers
+    origin: process.env.frontend_url,
+    methods: "GET,POST",
+    allowedHeaders: "Content-Type,Authorization",
   })
 );
-app.listen(process.env.PORT || 3000, () => {
+
+app.listen(port, () => {
   console.log(
-    `The app listening on port http://localhost:${process.env.PORT||3000}`
+    `The app listening on port http://localhost:${port}`
   );
 });
+
+app.use(bodyParser.json());
+app.use('/auth', authRouter);
+app.use('/pass', passRouter);
