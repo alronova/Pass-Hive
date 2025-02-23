@@ -16,7 +16,7 @@ app.get("/ping", (req, res) => {
 app.use(
   cors({
     origin: process.env.frontend_url,
-    methods: "GET,POST",
+    methods: "GET,POST,PUT,DELETE",
     allowedHeaders: "Content-Type,Authorization",
   })
 );
