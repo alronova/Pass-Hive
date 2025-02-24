@@ -29,4 +29,4 @@ app.listen(port, () => {
 
 app.use(bodyParser.json());
 app.use('/auth', authRouter);
-app.use('/pass', passRouter);
+// app.use('/pass', passRouter);

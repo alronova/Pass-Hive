@@ -3,7 +3,7 @@ const { signupCreds, loginCreds } = require('../middlewares/auth');
 
 const router = require('express').Router();
 
-router.post('/login', loginCreds, login);
-router.post('/signup', signupCreds, signup);
+router.post('/login', login);
+router.post('/signup', signup);
 
 module.exports = router;
