@@ -22,7 +22,6 @@ const signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    console.log(signupInfo);
     try {
       const response = await fetch(bs_url, {
         method: "POST",

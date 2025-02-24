@@ -6,11 +6,13 @@ import Main from "./pages/main"
 import Home from "./pages/home"
 import Docs from "./pages/docs"
 import About from "./pages/about"
+import { ToastWrapper } from './utils';
 
 
 function App() {
   return (
     <div>
+      <ToastWrapper />
       <BrowserRouter>
         <Routes>
           <Route index element={<Main />} />

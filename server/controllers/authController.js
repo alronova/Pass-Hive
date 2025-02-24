@@ -36,18 +36,18 @@ const login = async (req, res) => {
     try {
         const { cred, password } = req.body;
         const user = await UserModel.findOne({ $or: [{ email: cred }, { userName: cred }] });
-        const errorMsg = 'Credentials are wrong!';
+        const invalidCreds = 'Provided Credentials are wrong!';
         if (!user) {
             return res.status(403)
-                .json({ message: errorMsg, success: false });
+                .json({ message: "User doesn't exist, signup first!", success: false });
         }
         const isPassEqual = await bcrypt.compare(password, user.passHash);
         if (!isPassEqual) {
             return res.status(403)
-                .json({ message: errorMsg, success: false });
+                .json({ message: invalidCreds, success: false });
         }
         const jwtToken = jwt.sign(
-            { email: user.email, userName: user.userName, _id: user._id },
+            { email: user.email, userName: user.userName, u_name: user.name, _id: user._id },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         )
@@ -58,7 +58,7 @@ const login = async (req, res) => {
                 success: true,
                 jwtToken,
                 email: user.email,
-                name: user.name,
+                u_name: user.name,
                 userId: user._id
             })
     } catch (err) {
@@ -70,7 +70,21 @@ const login = async (req, res) => {
     }
 }
 
+const verifyToken = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Session Expired, Re-Login!' });
+        }
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        res.status(200).json({ message: 'Token Verified', success: true, decoded });
+    } catch (err) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+}
+
 module.exports = {
     signup,
-    login
+    login,
+    verifyToken
 }
